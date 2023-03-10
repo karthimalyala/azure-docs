@@ -162,6 +162,21 @@ For App Service, you then make the following modifications:
     ```python
     STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
     ```
+    
+1. When your Azure App Service web application throws an HTTP 500 (Internal Server Error) after setting DEBUG = False, it may be due to the updated versions of Django and Whitenoise. The serving of static content using compression and caching support when DEBUG is set to False can cause 500 errors on Azure App Services. In this case, you can add the following line for Whitenoise in your settings.py file.
+
+    ```python
+    STATICFILES_STORAGE = ('whitenoise.storage.CompressedStaticFilesStorage') 
+    
+    (or)
+    
+    STORAGES={
+      # ...
+      "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+      },
+    }
+    ```
 
 1. Also modify the `MIDDLEWARE` and `INSTALLED_APPS` lists to include Whitenoise:
 
